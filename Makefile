@@ -10,25 +10,22 @@
 # LAST EDITED:	    01/04/2018
 ###
 
-P = qlist
-OBJECTS = qlist.c
-CFLAGS = -Wall -O3
-LDLIBS=
 CC=gcc
-
-$(P):
-	$(CC) $(CFLAGS) -o $(P) $(OBJECTS) $(LDLIBS)
+ifeq ($(MAKECMDGOALS),debug)
+	CFLAGS = -g -O0 -Wall -D CONFIG_DEBUG_QLIST
+else
+	CFLAGS = -Wall -O3
+endif
 
 .PHONY: debug clean
 
-CFLAGS_DEBUG = -g -O0 -Wall -D CONFIG_DEBUG_QLIST
+qlist:
 
-debug:
-	$(CC) $(CFLAGS_DEBUG) -o $(P) $(OBJECTS) $(LDLIBS)
+debug: qlist
 
 clean:
-	rm -rf *.c~
-	rm -rf *.h~
-	rm -rf makefile~
+	rm -rf *.dSYM
+	rm -f *.o
+	rm -f qlist
 
 ###############################################################################
