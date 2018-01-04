@@ -40,24 +40,29 @@ static inline void error_exit(char *);
  ***/
 
 /******************************************************************************
- * FUNCTION:	    queue_init
+ * FUNCTION:	    queue_create
  *
  * DESCRIPTION:	    Initializes a Queue pointer.
  *
- * ARGUMENTS:	    queue: (Queue *) -- the queue to be initialized.
- *		    destroy: (void (*)(void *)) -- pointer to a user defined
+ * ARGUMENTS:	    destroy: (void (*)(void *)) -- pointer to a user defined
  *			     function meant to free the data held in the queue.
  *
- * RETURN:	    void.
+ * RETURN:	    (Queue *) -- pointer to the new queue, or NULL.
  *
  * NOTES:	    O(1)
  ***/
-void queue_init(Queue * queue, void (*destroy)(void *))
+Queue * queue_create(void (*destroy)(void *))
 {
+  Queue * queue = NULL;
+  if ((queue = malloc(sizeof(Queue))) == NULL)
+    return NULL;
+
   queue->head = NULL;
   queue->tail = NULL;
   queue->size = 0;
   queue->destroy = destroy;
+
+  return queue;
 }
 
 /******************************************************************************
@@ -131,31 +136,34 @@ int queue_dequeue(Queue * queue, void ** data)
 }
 
 /******************************************************************************
- * FUNCTION:	    queue_dest
+ * FUNCTION:	    queue_destroy
  *
  * DESCRIPTION:	    Removes all data in the queue, and sets all bytes of memory
  *		    in the Queue structure to be 0.
  *
- * ARGUMENTS:	    queue: (Queue *) -- the queue to be operated on.
+ * ARGUMENTS:	    queue: (Queue **) -- the queue to be operated on.
  *
  * RETURN:	    void.
  *
  * NOTES:	    O(n)
  ***/
-void queue_dest(Queue * queue)
+void queue_destroy(Queue ** queue)
 {
+  if (queue == NULL || *queue == NULL)
+    return;
+
   void * data;
+  while (!queue_isempty(*queue)) {
 
-  while (!queue_isempty(queue)) {
+    queue_dequeue(*queue, (void **)&data);
 
-    queue_dequeue(queue, (void **)&data);
-
-   if (data != NULL && queue->destroy != NULL)
-      queue->destroy(data);
+    if (data != NULL && (*queue)->destroy != NULL)
+      (*queue)->destroy(data);
 
   }
 
-  memset(queue, 0, sizeof(Queue));
+  free(*queue);
+  *queue = NULL;
 }
 
 /******************************************************************************
@@ -170,12 +178,10 @@ int main(int argc, char * arv[])
       * Check that attempting to dequeue from an empty queue returns -1.
    */
   int * pNum = NULL;
-  Queue * q;
+  Queue * q = NULL;
 
-  if ((q = (Queue *)malloc(sizeof(Queue))) == NULL)
+  if ((q = queue_create(free)) == NULL)
     error_exit("Could not allocate memory for Queue!");
-
-  queue_init(q, free);
 
   srand((unsigned)time(NULL));
 
@@ -204,8 +210,8 @@ int main(int argc, char * arv[])
 
   assert(queue_dequeue(q, (void **)&pNum) == -1);
 
-  queue_dest(q);
-  free(q);
+  queue_destroy(&q);
+  assert(q == NULL);
 }
 #endif /* CONFIG_DEBUG_QLIST */
 

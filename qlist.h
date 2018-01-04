@@ -11,8 +11,8 @@
  * LAST EDITED:	    01/04/2018
  ***/
 
-#ifndef __ET_QUEUELIST_H__
-#define __ET_QUEUELIST_H__
+#ifndef __ET_QLIST_H__
+#define __ET_QLIST_H__
 
 /******************************************************************************
  * TYPE DEFINITIONS
@@ -47,11 +47,11 @@ typedef struct _Queue_ {
  * API FUNCTION PROTOTYPES
  ***/
 
-extern void queue_init(Queue *, void (*)(void *));
+extern Queue * queue_create(void (*)(void *));
 extern int queue_enqueue(Queue *, void *);
 extern int queue_dequeue(Queue *, void **);
-extern void queue_dest(Queue *);
+extern void queue_destroy(Queue **);
 
-#endif /* __ET_QUEUELIST_H__ */
+#endif /* __ET_QLIST_H__ */
 
 /*****************************************************************************/
