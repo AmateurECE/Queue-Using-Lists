@@ -40,21 +40,21 @@ static inline void error_exit(char *);
  ***/
 
 /******************************************************************************
- * FUNCTION:	    queue_create
+ * FUNCTION:	    qlist_create
  *
- * DESCRIPTION:	    Initializes a Queue pointer.
+ * DESCRIPTION:	    Initializes a qlist pointer.
  *
  * ARGUMENTS:	    destroy: (void (*)(void *)) -- pointer to a user defined
  *			     function meant to free the data held in the queue.
  *
- * RETURN:	    (Queue *) -- pointer to the new queue, or NULL.
+ * RETURN:	    (qlist *) -- pointer to the new queue, or NULL.
  *
  * NOTES:	    O(1)
  ***/
-Queue * queue_create(void (*destroy)(void *))
+qlist * qlist_create(void (*destroy)(void *))
 {
-  Queue * queue = NULL;
-  if ((queue = malloc(sizeof(Queue))) == NULL)
+  qlist * queue = NULL;
+  if ((queue = malloc(sizeof(qlist))) == NULL)
     return NULL;
 
   queue->head = NULL;
@@ -66,27 +66,27 @@ Queue * queue_create(void (*destroy)(void *))
 }
 
 /******************************************************************************
- * FUNCTION:	    queue_enqueue
+ * FUNCTION:	    qlist_enqueue
  *
  * DESCRIPTION:	    Enqueues the data held in 'data.'
  *
- * ARGUMENTS:	    queue: (Queue *) -- the queue to be operated on.
+ * ARGUMENTS:	    queue: (qlist *) -- the queue to be operated on.
  *		    data: (void *) -- the data to be enqueued.
  *
  * RETURN:	    int -- 0 on success, -1 otherwise.
  *
  * NOTES:	    O(1)
  ***/
-int queue_enqueue(Queue * queue, void * data)
+int qlist_enqueue(qlist * queue, void * data)
 {
-  QElmt * new;
+  qelmt * new;
 
-  if (data == NULL || (new = (QElmt *)malloc(sizeof(QElmt))) == NULL)
+  if (data == NULL || (new = (qelmt *)malloc(sizeof(qelmt))) == NULL)
     return -1;
 
   new->data = data;
 
-  if (queue_isempty(queue)) {
+  if (qlist_isempty(queue)) {
     /* Handle queueing when the queue is empty. */
     queue->head = new;
     queue->tail = new;
@@ -105,23 +105,23 @@ int queue_enqueue(Queue * queue, void * data)
 }
 
 /******************************************************************************
- * FUNCTION:	    queue_dequeue
+ * FUNCTION:	    qlist_dequeue
  *
  * DESCRIPTION:	    Dequeues from the queue, and places the data in 'data.'
  *
- * ARGUMENTS:	    queue: (Queue *) -- the queue to be operated on.
+ * ARGUMENTS:	    queue: (qlist *) -- the queue to be operated on.
  *		    data: (void *) -- once removed, the data is placed here.
  *
  * RETURN:	    int -- 0 on success, -1 otherwise.
  *
  * NOTES:	    O(1)
  ***/
-int queue_dequeue(Queue * queue, void ** data)
+int qlist_dequeue(qlist * queue, void ** data)
 {
-  if (data == NULL || queue_isempty(queue))
+  if (data == NULL || qlist_isempty(queue))
     return -1;
 
-  QElmt * old = queue->head;
+  qelmt * old = queue->head;
   *data = old->data;
   queue->head = old->next;
 
@@ -136,26 +136,26 @@ int queue_dequeue(Queue * queue, void ** data)
 }
 
 /******************************************************************************
- * FUNCTION:	    queue_destroy
+ * FUNCTION:	    qlist_destroy
  *
  * DESCRIPTION:	    Removes all data in the queue, and sets all bytes of memory
- *		    in the Queue structure to be 0.
+ *		    in the qlist structure to be 0.
  *
- * ARGUMENTS:	    queue: (Queue **) -- the queue to be operated on.
+ * ARGUMENTS:	    queue: (qlist **) -- the queue to be operated on.
  *
  * RETURN:	    void.
  *
  * NOTES:	    O(n)
  ***/
-void queue_destroy(Queue ** queue)
+void qlist_destroy(qlist ** queue)
 {
   if (queue == NULL || *queue == NULL)
     return;
 
   void * data;
-  while (!queue_isempty(*queue)) {
+  while (!qlist_isempty(*queue)) {
 
-    queue_dequeue(*queue, (void **)&data);
+    qlist_dequeue(*queue, (void **)&data);
 
     if (data != NULL && (*queue)->destroy != NULL)
       (*queue)->destroy(data);
@@ -178,10 +178,10 @@ int main(int argc, char * arv[])
       * Check that attempting to dequeue from an empty queue returns -1.
    */
   int * pNum = NULL;
-  Queue * q = NULL;
+  qlist * q = NULL;
 
-  if ((q = queue_create(free)) == NULL)
-    error_exit("Could not allocate memory for Queue!");
+  if ((q = qlist_create(free)) == NULL)
+    error_exit("Could not allocate memory for qlist!");
 
   srand((unsigned)time(NULL));
 
@@ -191,7 +191,7 @@ int main(int argc, char * arv[])
     pNum = (int *)malloc(sizeof(int));
     *pNum = rand() % 10;
 
-    if (queue_enqueue(q, (void *)pNum) != 0)
+    if (qlist_enqueue(q, (void *)pNum) != 0)
       error_exit("There was an error when enqueueing!");
     else
       printf("int %d @ %p\n", *pNum, pNum);
@@ -201,16 +201,16 @@ int main(int argc, char * arv[])
   printf("==== Removing =====\n");
   for (int i = 0; i < 10; i++) {
 
-    if (queue_dequeue(q, (void **)&pNum) != 0)
+    if (qlist_dequeue(q, (void **)&pNum) != 0)
       error_exit("There was an error when dequeueing!");
     else
       printf("int %d @ %p\n", *pNum, pNum);
     free(pNum);
   }
 
-  assert(queue_dequeue(q, (void **)&pNum) == -1);
+  assert(qlist_dequeue(q, (void **)&pNum) == -1);
 
-  queue_destroy(&q);
+  qlist_destroy(&q);
   assert(q == NULL);
 }
 #endif /* CONFIG_DEBUG_QLIST */

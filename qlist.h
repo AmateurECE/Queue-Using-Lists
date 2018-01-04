@@ -18,39 +18,39 @@
  * TYPE DEFINITIONS
  ***/
 
-typedef struct _QElmt_ {
+typedef struct _qelmt_ {
 
   void * data;
-  struct _QElmt_ * next;
+  struct _qelmt_ * next;
 
-} QElmt;
+} qelmt;
 
-typedef struct _Queue_ {
+typedef struct {
 
-  QElmt * head;
-  QElmt * tail;
+  qelmt * head;
+  qelmt * tail;
 
   int size;
   void (*destroy)(void *);
 
-} Queue;
+} qlist;
 
 /******************************************************************************
  * MACRO DEFINITIONS
  ***/
 
-#define queue_peek(queue) ((queue)->head)
-#define queue_size(queue) ((queue)->size)
-#define queue_isempty(queue) ((queue)->size == 0 ? 1 : 0)
+#define qlist_peek(queue) ((queue)->head)
+#define qlist_size(queue) ((queue)->size)
+#define qlist_isempty(queue) ((queue)->size == 0 ? 1 : 0)
 
 /******************************************************************************
  * API FUNCTION PROTOTYPES
  ***/
 
-extern Queue * queue_create(void (*)(void *));
-extern int queue_enqueue(Queue *, void *);
-extern int queue_dequeue(Queue *, void **);
-extern void queue_destroy(Queue **);
+extern qlist * qlist_create(void (*)(void *));
+extern int qlist_enqueue(qlist *, void *);
+extern int qlist_dequeue(qlist *, void **);
+extern void qlist_destroy(qlist **);
 
 #endif /* __ET_QLIST_H__ */
 
