@@ -1,15 +1,15 @@
 /*******************************************************************************
- * NAME:	    queuelist.c
+ * NAME:	    qlist.c
  *
  * AUTHOR:	    Ethan D. Twardy
  *
  * DESCRIPTION:	    Source code for the implementation of a Queue, using a
- *		    linked list. Follows the function prototypes in queuelist.h.
+ *		    linked list. Follows the function prototypes in qlist.h.
  *		    Also contains test code, which is compiled by 'make debug'.
  *
- * CREATED:	    05/09/17
+ * CREATED:	    05/09/2017
  *
- * LAST EDITED:	    06/07/17
+ * LAST EDITED:	    01/04/2018
  ***/
 
 /*******************************************************************************
@@ -25,7 +25,7 @@
 #include <assert.h>
 #endif /* CONFIG_DEBUG_QLIST */
 
-#include "queuelist.h"
+#include "qlist.h"
 
 /*******************************************************************************
  * LOCAL PROTOTYPES

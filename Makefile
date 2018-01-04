@@ -1,13 +1,13 @@
 ################################################################################
 # NAME: makefile
 # AUTHOR: Ethan D. Twardy
-# DESCRIPTION: makefile for the executable C code contained in queuelist.c
+# DESCRIPTION: makefile for the executable C code contained in qlist.c
 # CREATED: 06/07/17
-# LAST EDITED: 06/07/17
+# LAST EDITED: 01/04/2018
 ################################################################################
 
-P = queuelist
-OBJECTS = queuelist.c
+P = qlist
+OBJECTS = qlist.c
 CFLAGS = -Wall -O3
 LDLIBS=
 CC=gcc

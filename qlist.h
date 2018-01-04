@@ -1,14 +1,14 @@
 /*******************************************************************************
- * NAME:	    queuelist.h
+ * NAME:	    qlist.h
  *
  * AUTHOR:	    Ethan D. Twardy
  *
  * DESCRIPTION:	    Header file containing the typedefs and macros for the
- *		    implementation of a Queue using Lists in queuelist.c.
+ *		    implementation of a Queue using Lists in qlist.c.
  *
- * CREATED:	    05/09/17
+ * CREATED:	    05/09/2017
  *
- * LAST EDITED:	    06/07/17
+ * LAST EDITED:	    01/04/2018
  ***/
 
 /* ********************************** NOTE ********************************** */
